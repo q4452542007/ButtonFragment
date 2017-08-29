@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
+
+    <RelativeLayout
+        android:id="@+id/station_inf"
+        android:layout_width="0sp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/bus_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="55dp"
+            android:layout_marginTop="64dp"
+            android:text="1路"/>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/bus_path"
+            android:layout_marginStart="79dp"
+            android:layout_toEndOf="@+id/bus_path"
+            android:text="上行"/>
+
+        <TextView
+            android:id="@+id/bus_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
+            android:text="0.0Km/H"
+            android:textColor="@color/speed"
+            android:textSize="40sp"
+            android:layout_below="@+id/bus_path"
+            android:layout_alignStart="@+id/bus_path"/>
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/bus_speed"
+            android:layout_below="@+id/bus_speed"
+            android:layout_marginTop="41dp"
+            android:text="本站："
+            android:textSize="30sp"/>
+
+        <TextView
+            android:id="@+id/current_station"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView5"
+            android:layout_below="@+id/textView5"
+            android:layout_marginTop="38dp"
+            android:text="公交总站"
+            android:textColor="@color/current_station"
+            android:textSize="35sp"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="下一站"
+            android:textSize="20sp"
+            android:layout_below="@+id/current_station"
+            android:layout_alignStart="@+id/current_station"
+            android:layout_marginTop="36dp"/>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_alignTop="@+id/textView2"
+            android:textSize="20sp"
+            android:text="图软科技"/>
+
+        <TextView
+            android:id="@+id/mytime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView2"
+            android:layout_marginTop="40dp"
+            android:layout_alignStart="@+id/current_station"
+            android:textSize="23sp"
+            />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/bus_path"
+            />
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="0sp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+        <SurfaceView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/surfaceview"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
