@@ -10,4 +10,7 @@
 
     <color name="white">#FFFFFFFF</color>
 
+    <color name="tab_tv_nor">#797979</color>
+    <color name="tab_tv_sel">#3399dd</color>
+
 </resources>

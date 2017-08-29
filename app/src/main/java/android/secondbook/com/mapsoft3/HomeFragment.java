@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -22,9 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -51,16 +48,17 @@ public class HomeFragment extends Fragment implements SurfaceHolder.Callback{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.station, container, false);
+        View view = inflater.inflate(R.layout.fragment_homepage, container, false);
         context = getContext();
 
         wifiImage = (ImageView) view.findViewById(R.id.imageView);
         tv_time = (TextView) view.findViewById(R.id.mytime);
 
-        surfaceview = (SurfaceView)view.findViewById(R.id.surfaceview);
+       /* surfaceview = (SurfaceView)view.findViewById(R.id.surfaceview);
         surfaceholder = surfaceview.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        surfaceholder.addCallback(HomeFragment.this);
+        surfaceholder.addCallback(HomeFragment.this);*/
+
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         mNetworkChangeReceiver = new NetworkChangeReceiver();
