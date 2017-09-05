@@ -7,37 +7,45 @@
     <Button
         android:id="@+id/home_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_weight="1"
         android:gravity="center"
         android:background="@drawable/btn_bottom_confirm_bg"
+        android:textStyle="bold"
+        android:textSize="50dp"
         android:text="@string/home" />
 
     <Button
         android:id="@+id/path_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_weight="1"
         android:gravity="center"
         android:background="@drawable/btn_bottom_confirm_bg"
+        android:textStyle="bold"
+        android:textSize="50dp"
         android:text="@string/path" />
 
     <Button
-        android:id="@+id/anime_btn"
+        android:id="@+id/affair_btn"
+        android:layout_height="80dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
         android:background="@drawable/btn_bottom_confirm_bg"
-        android:text="@string/anime" />
+        android:textStyle="bold"
+        android:textSize="50dp"
+        android:text="@string/affair" />
 
     <Button
-        android:id="@+id/variety_btn"
+        android:id="@+id/option_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_weight="1"
         android:gravity="center"
         android:background="@drawable/btn_bottom_confirm_bg"
-        android:text="@string/variety" />
+        android:textStyle="bold"
+        android:textSize="50dp"
+        android:text="@string/option" />
 
 </LinearLayout>

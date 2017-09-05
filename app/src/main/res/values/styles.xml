@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="OptionButton" parent="android:style/Widget.Holo.Button">
+        <item name="android:background">@drawable/button_option_item_normal</item>
+    </style>
+
 </resources>

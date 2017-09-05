@@ -6,8 +6,8 @@
 
     <string name="home">首页</string>
     <string name="path">切换线路</string>
-    <string name="anime">动漫</string>
-    <string name="variety">综艺</string>
+    <string name="affair">事务</string>
+    <string name="option">设置</string>
 
 
     <string name="anime_view">这是一个动漫界面</string>

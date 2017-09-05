@@ -1,6 +1,5 @@
 package android.secondbook.com.mapsoft3;
 
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -30,21 +28,18 @@ public class ChangePathFragment extends Fragment {
 
     private static final String ARG_PATH = "path";
 
-    private static final int TAG_POSITION = 1;
-    private static final int TAG_PATH = 2;
+//    private static final int TAG_POSITION = 1;
 
     private RecyclerView mCrimeRecyclerView;
 
     private StationAdapter mAdapter;
 
-    private List<Boolean> isClicks;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_path, container, false);
 
-        mCrimeRecyclerView = (RecyclerView) view
-                .findViewById(R.id.path_recycler_view);
+        mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.path_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         readExcel();
         updateUI();
@@ -113,6 +108,7 @@ public class ChangePathFragment extends Fragment {
             }
         }
         public void setOnClickListener(ItemClickListener listener){
+
             this.listener = listener;
         }
 
@@ -128,8 +124,7 @@ public class ChangePathFragment extends Fragment {
         public void onBindViewHolder(final StationHolder holder, final int position) {
             Station station = mStations.get(position);
             holder.bindStation(station);
-            holder.itemView.setTag(TAG_POSITION,position);
-            holder.itemView.setTag(TAG_PATH,station);
+            holder.itemView.setTag(position);
             if(isClicks.get(position)){
                 holder.mPathTextView.setTextColor(Color.parseColor("#00a0e9"));
             }else{
@@ -147,7 +142,7 @@ public class ChangePathFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            int position = (int)v.getTag(TAG_POSITION);
+            int position = (int)v.getTag();
  //           Station station = (Station) v.getTag(TAG_PATH);
             for(int i = 0; i <isClicks.size();i++)
             {
@@ -170,7 +165,7 @@ public class ChangePathFragment extends Fragment {
              **/
             String inPath = getInnerSDCardPath();
             InputStream is = new FileInputStream(inPath+"/pathnum.xls");
-            //Workbook book = Workbook.getWorkbook(new File("mnt/sdcard/test.xls"));
+//          Workbook book = Workbook.getWorkbook(new File("mnt/sdcard/test.xls"));
             Workbook book = Workbook.getWorkbook(is);
 
             int num = book.getNumberOfSheets();
@@ -194,7 +189,7 @@ public class ChangePathFragment extends Fragment {
         }
     }
     public String getInnerSDCardPath() {
-        return Environment.getExternalStorageDirectory().getPath();
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
     }
     public interface ItemClickListener{
         void onItemClick(View v,int position);

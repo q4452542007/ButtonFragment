@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="55dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="64dp"
             android:text="1路"/>
 
@@ -38,7 +38,7 @@
             android:layout_marginTop="33dp"
             android:text="0.0Km/H"
             android:textColor="@color/speed"
-            android:textSize="40sp"
+            android:textSize="50dp"
             android:layout_below="@+id/bus_path"
             android:layout_alignStart="@+id/bus_path"/>
 
@@ -50,7 +50,7 @@
             android:layout_below="@+id/bus_speed"
             android:layout_marginTop="41dp"
             android:text="本站："
-            android:textSize="30sp"/>
+            android:textSize="30dp"/>
 
         <TextView
             android:id="@+id/current_station"
@@ -61,14 +61,15 @@
             android:layout_marginTop="38dp"
             android:text="公交总站"
             android:textColor="@color/current_station"
-            android:textSize="35sp"/>
+            android:textStyle="bold"
+            android:textSize="35dp"/>
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="下一站"
-            android:textSize="20sp"
+            android:textSize="30dp"
             android:layout_below="@+id/current_station"
             android:layout_alignStart="@+id/current_station"
             android:layout_marginTop="36dp"/>
@@ -79,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/textView3"
             android:layout_alignTop="@+id/textView2"
-            android:textSize="20sp"
+            android:textSize="30sp"
             android:text="图软科技"/>
 
         <TextView

@@ -1,6 +1,7 @@
 package android.secondbook.com.mapsoft3;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,19 +17,23 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
 
-    private Button homeBtn, pathBtn, animeBtn, varietyBtn;
+    private Button homeBtn, pathBtn, affairBtn, optionBtn;
     private List<Button> btnList = new ArrayList<Button>();
     private FragmentManager fm;
     private FragmentTransaction ft;
 
-
+    private RelativeLayout mMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideBottomUIMenu();
+        getWindow().getDecorView().setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(R.layout.activity_main);
-
-
+        mMain = (RelativeLayout) findViewById(R.id.main);
+        mMain.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         findById();
 
@@ -44,17 +50,17 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private void findById() {
         homeBtn = (Button) this.findViewById(R.id.home_btn);
         pathBtn = (Button) this.findViewById(R.id.path_btn);
-        animeBtn = (Button) this.findViewById(R.id.anime_btn);
-        varietyBtn = (Button) this.findViewById(R.id.variety_btn);
+        affairBtn = (Button) this.findViewById(R.id.affair_btn);
+        optionBtn = (Button) this.findViewById(R.id.option_btn);
         homeBtn.setOnClickListener(this);
         pathBtn.setOnClickListener(this);
-        animeBtn.setOnClickListener(this);
-        varietyBtn.setOnClickListener(this);
+        affairBtn.setOnClickListener(this);
+        optionBtn.setOnClickListener(this);
 
         btnList.add(homeBtn);
         btnList.add(pathBtn);
-        btnList.add(animeBtn);
-        btnList.add(varietyBtn);
+        btnList.add(affairBtn);
+        btnList.add(optionBtn);
     }
 
     private void setBackgroundColorById(int btnId) {
@@ -85,14 +91,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 ft.replace(R.id.fragment_content, ChangePathFragment.newInstance("book"));
                 break;
 
-            case R.id.anime_btn:
-                setBackgroundColorById(R.id.anime_btn);
-                ft.replace(R.id.fragment_content, new MusicFragment());
+            case R.id.affair_btn:
+                setBackgroundColorById(R.id.affair_btn);
+                ft.replace(R.id.fragment_content, new AffairFragment());
                 break;
 
-            case R.id.variety_btn:
-                setBackgroundColorById(R.id.variety_btn);
-                ft.replace(R.id.fragment_content, new TvFragment());
+            case R.id.option_btn:
+                setBackgroundColorById(R.id.option_btn);
+                ft.replace(R.id.fragment_content, new OptionFragment());
                 break;
 
             default:
@@ -100,6 +106,20 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         }
         // 不要忘记提交
         ft.commit();
+    }
+
+    protected void hideBottomUIMenu() {
+        //隐藏虚拟按键，并且全屏
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = this.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
     }
 
 
