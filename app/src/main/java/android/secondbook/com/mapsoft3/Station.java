@@ -1,22 +1,17 @@
 package android.secondbook.com.mapsoft3;
 
-import java.util.Date;
-import java.util.UUID;
+/**
+ * Created by Administrator on 2017/9/6.
+ */
 
 public class Station {
 
-    private UUID mId;
+
     private String mName;
 
-    public Station() {
-        this(UUID.randomUUID());
-    }
 
-    public Station(UUID id) {
-        mId = id;
-    }
-    public UUID getId() {
-        return mId;
+    public Station(String name) {
+        mName = name;
     }
 
     public String getName() {
@@ -26,4 +21,5 @@ public class Station {
     public void setName(String name) {
         mName = name;
     }
+
 }

@@ -1,41 +1,41 @@
 package android.secondbook.com.mapsoft3;
 
-import android.content.Context;
+
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class StationLab {
     private static StationLab sStationLab;
 
-    private ArrayList<Station> mStations;
+    private ArrayList<Path> mPaths;
 
-    public static StationLab get(Context context) {
+    public static StationLab get() {
         if (sStationLab == null) {
-            sStationLab = new StationLab(context);
+            sStationLab = new StationLab();
         }
         return sStationLab;
     }
 
-    private StationLab(Context context) {
-        mStations = new ArrayList<>();
+    private StationLab() {
+        mPaths = new ArrayList<>();
     }
 
-    public void addStation(Station s) {
-        mStations.add(s);
+    public void addPath(Path s) {
+        mPaths.add(s);
     }
 
-    public List<Station> getStations() {
-        return mStations;
+    public List<Path> getPaths() {
+        return mPaths;
     }
 
-    public Station getStation(UUID id) {
-        for (Station station : mStations) {
-            if (station.getId().equals(id)) {
-                return station;
+    public Path getPath(String pathNum) {
+        for (Path path : mPaths) {
+            if (path.getNum().equals(pathNum)) {
+                return path;
             }
         }
-        return null;
+        return new Path();
     }
 }
+

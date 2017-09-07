@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +32,16 @@ public class ChangePathFragment extends Fragment {
 
     private static final String ARG_PATH = "path";
 
+    private static final String TAG = "ChangePathFragment";
+
     private Spinner spinner;
     private List<String> pathnum_list;
     private List<String> data_uplist;
     private List<String> data_downlist;
+
+    private StationLab mStationLab;
+
+
 
     private ArrayAdapter<String> arr_adapter;
 
@@ -54,11 +61,13 @@ public class ChangePathFragment extends Fragment {
         mDownRecyclerView = view.findViewById(R.id.downpath_recycler_view);
         mUpRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDownRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         spinner = (Spinner) view.findViewById(R.id.spinner);
         //数据
         pathnum_list = new ArrayList<String>();
-
-        readPath();
+        if (pathnum_list != null) {
+            readPath();
+        }
         //适配器
 
 
@@ -70,16 +79,20 @@ public class ChangePathFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String pathNum = arr_adapter.getItem(i);
                 data_uplist = new ArrayList<String>();
                 data_downlist = new ArrayList<String>();
-                String pathNum = arr_adapter.getItem(i);
-                readStaion(pathNum);
-                upAdapter = new StationAdapter(data_uplist);
+                mStationLab =StationLab.get();
+                Path mPath = mStationLab.getPath(pathNum);
+                if (mPath.getNum() == null) {
+                    readStaion(pathNum,mPath);
+                }
+                upAdapter = new StationAdapter(mPath.getUpStations());
                 mUpRecyclerView.setAdapter(upAdapter);
-                downAdapter = new StationAdapter(data_downlist);
+                downAdapter = new StationAdapter(mPath.getDownStations());
                 mDownRecyclerView.setAdapter(downAdapter);
-                upAdapter.notifyDataSetChanged();
-                downAdapter.notifyDataSetChanged();
+                    upAdapter.notifyDataSetChanged();
+                    downAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -110,41 +123,44 @@ public class ChangePathFragment extends Fragment {
             /**
              * 后续考虑问题,比如Excel里面的图片以及其他数据类型的读取
              **/
-            String inPath = getInnerSDCardPath();
-            InputStream is = new FileInputStream(inPath+"/pathnum.xls");
-//          Workbook book = Workbook.getWorkbook(new File("mnt/sdcard/test.xls"));
-            Workbook book = Workbook.getWorkbook(is);
 
-            int num = book.getNumberOfSheets();
-            // 获得第一个工作表对象
-            for (int k =0; k < num; k++) {
-                Sheet sheet = book.getSheet(0);
-                int Rows = sheet.getRows();
-                int Cols = sheet.getColumns();
-                for (int i = 0; i < Cols; ++i) {
-                    for (int j = 0; j < Rows; ++j) {
-                        pathnum_list.add(sheet.getCell(i,j).getContents());
+                String inPath = getInnerSDCardPath();
+                InputStream is = new FileInputStream(inPath + "/pathnum.xls");
+//          Workbook book = Workbook.getWorkbook(new File("mnt/sdcard/test.xls"));
+                Workbook book = Workbook.getWorkbook(is);
+
+                int num = book.getNumberOfSheets();
+                // 获得第一个工作表对象
+                for (int k = 0; k < num; k++) {
+                    Sheet sheet = book.getSheet(0);
+                    int Rows = sheet.getRows();
+                    int Cols = sheet.getColumns();
+                    for (int i = 0; i < Cols; ++i) {
+                        for (int j = 0; j < Rows; ++j) {
+                            pathnum_list.add(sheet.getCell(i, j).getContents());
+                        }
                     }
                 }
+                book.close();
+            } catch(Exception e){
+                System.out.println(e);
             }
-            book.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+
     }
-    public void readStaion(String pathNum) {
+    public void readStaion(String pathNum,Path mPath) {
         try {
             /**
              * 后续考虑问题,比如Excel里面的图片以及其他数据类型的读取
              **/
             String inPath = getInnerSDCardPath();
             InputStream is = new FileInputStream(inPath+"/"+pathNum+".xls");
+            mPath.setNum(pathNum);
 //          Workbook book = Workbook.getWorkbook(new File("mnt/sdcard/test.xls"));
             Workbook book = Workbook.getWorkbook(is);
-
             int num = book.getNumberOfSheets();
             // 获得第一个工作表对象
             for (int k =0; k < num; k++) {
+
                 Sheet sheet = book.getSheet(0);
                 int Rows = sheet.getRows();
                 int Cols = sheet.getColumns();
@@ -152,51 +168,21 @@ public class ChangePathFragment extends Fragment {
                     for (int j = 0; j < Rows; ++j) {
                         // getCell(Col,Row)获得单元格的值
                         if (i == 0) {
-                            data_uplist.add(sheet.getCell(i, j).getContents());
+                            mPath.addUpStation(mPath.getStation(sheet.getCell(i, j).getContents()));
                         }
                         if (i == 1) {
-                            data_downlist.add(sheet.getCell(i, j).getContents());
+                            mPath.addDownStation(mPath.getStation(sheet.getCell(i, j).getContents()));
                         }
                     }
                 }
             }
+            mStationLab.addPath(mPath);
             book.close();
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-
-    public void readExcel() {
-        try {
-            /**
-             * 后续考虑问题,比如Excel里面的图片以及其他数据类型的读取
-             **/
-            String inPath = getInnerSDCardPath();
-            InputStream is = new FileInputStream(inPath+"/pathnum.xls");
-//          Workbook book = Workbook.getWorkbook(new File("mnt/sdcard/test.xls"));
-            Workbook book = Workbook.getWorkbook(is);
-
-            int num = book.getNumberOfSheets();
-            // 获得第一个工作表对象
-            for (int k =0; k < num; k++) {
-                Sheet sheet = book.getSheet(0);
-                int Rows = sheet.getRows();
-                int Cols = sheet.getColumns();
-                for (int i = 0; i < Cols; ++i) {
-                    for (int j = 0; j < Rows; ++j) {
-                        // getCell(Col,Row)获得单元格的值
-                        Station station = new Station();
-                        station.setName(sheet.getCell(i,j).getContents());
-                        StationLab.get(getActivity()).addStation(station);
-                    }
-                }
-            }
-            book.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
     private class StationHolder extends RecyclerView.ViewHolder {
 
         private TextView mPathTextView;
@@ -221,9 +207,9 @@ public class ChangePathFragment extends Fragment {
     }
 
     private class StationAdapter extends RecyclerView.Adapter<StationHolder> {
-        List<String> mList;
+        List<Station> mList;
 
-        public StationAdapter(List<String> list) {
+        public StationAdapter(List<Station> list) {
             mList = list;
         }
 
@@ -236,7 +222,7 @@ public class ChangePathFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final StationHolder holder, final int position) {
-            holder.bindStation(mList.get(position));
+            holder.bindStation(mList.get(position).getName());
         }
 
 
@@ -252,4 +238,9 @@ public class ChangePathFragment extends Fragment {
         return Environment.getExternalStorageDirectory().getAbsolutePath();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "Destroy");
+    }
 }
