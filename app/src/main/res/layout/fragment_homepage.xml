@@ -111,9 +111,9 @@
         android:orientation="vertical">
 
         <SurfaceView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/surfaceview"/>
+            android:id="@+id/surface"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
 
     </LinearLayout>

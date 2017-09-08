@@ -4,34 +4,44 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import android.graphics.ImageFormat;
 import android.hardware.Camera;
+import android.media.MediaRecorder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+import static android.content.Context.MODE_WORLD_READABLE;
 
 
 /**
  * Created by WangChang on 2016/5/15.
  */
-public class HomeFragment extends Fragment implements SurfaceHolder.Callback{
+public class HomeFragment extends Fragment {
 
     private TextView tv_time;
     private static final int msgKey1 = 1;
@@ -42,9 +52,42 @@ public class HomeFragment extends Fragment implements SurfaceHolder.Callback{
     private ImageView wifiImage;
 
     private static Context context = null;
-    private SurfaceView surfaceview;
-    private SurfaceHolder surfaceholder;
-    private Camera mCamera = null;
+
+    private SurfaceView surfaceView;
+    private SurfaceHolder surfaceHolder;
+    private Button okButton, photoButton, videoButton, browseButton;
+    private Spinner systemSpinner, channelSpinner;
+
+    private boolean isOnPause = false;
+    // 功能相关
+    private MediaRecorder mediaRecorder;
+    private String videoFile = null;
+    private boolean isRecord = false; // 判断是否录像
+
+    private String dateString = null; // 保存文件
+    public static String extsd_path = null;
+    private int height = 0; // 制式通道的改变
+    private int width = 0;
+
+    private Camera camera = null;
+    private Camera.Parameters param = null;
+    private boolean previewRunning = false;
+    private boolean isOpen = false;
+
+    // 数据保存
+    private String[] sysList = { "P  A  L", "N T S C", };
+    private String[] channelList = new String[6];
+
+    private SharedPreferences preferencesValue;
+    private SharedPreferences.Editor editorValue;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        preferencesValue = getActivity().getSharedPreferences("feijie", MODE_WORLD_READABLE);
+        editorValue = preferencesValue.edit();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,10 +97,13 @@ public class HomeFragment extends Fragment implements SurfaceHolder.Callback{
         wifiImage = (ImageView) view.findViewById(R.id.imageView);
         tv_time = (TextView) view.findViewById(R.id.mytime);
 
-       /* surfaceview = (SurfaceView)view.findViewById(R.id.surfaceview);
-        surfaceholder = surfaceview.getHolder();
-        surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        surfaceholder.addCallback(HomeFragment.this);*/
+
+
+        // 初始化surfaceView
+        surfaceView = (SurfaceView) view.findViewById(R.id.surface);
+        surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(new MySurfaceViewCallback());
+        surfaceHolder.setType(surfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
@@ -78,52 +124,8 @@ public class HomeFragment extends Fragment implements SurfaceHolder.Callback{
         return fragment;
     }
 
-    @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        System.out.println("surfacecreated");
-        //获取camera对象
-        /*mCamera = Camera.open(0);
-        try {
-            //设置预览监听
-            mCamera.setPreviewDisplay(surfaceHolder);
-            Camera.Parameters parameters = mCamera.getParameters();
 
-            if (this.getResources().getConfiguration().orientation
-                    != Configuration.ORIENTATION_LANDSCAPE) {
-                parameters.set("orientation", "portrait");
-                mCamera.setDisplayOrientation(90);
-                parameters.setRotation(90);
-            } else {
-                parameters.set("orientation", "landscape");
-                mCamera.setDisplayOrientation(0);
-                parameters.setRotation(0);
-            }
-            mCamera.setParameters(parameters);
-            //启动摄像头预览
-            mCamera.startPreview();
-            System.out.println("camera.startpreview");
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            mCamera.release();
-            System.out.println("camera.release");
-        }*/
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        System.out.println("surfaceDestroyed");
-        if (mCamera != null) {
-            mCamera.stopPreview();
-            mCamera.release();
-        }
-
-    }
 
     public class TimeThread extends  Thread{
         @Override
@@ -182,6 +184,89 @@ public class HomeFragment extends Fragment implements SurfaceHolder.Callback{
         super.onDestroy();
         getActivity().unregisterReceiver(mNetworkChangeReceiver);
     }
+
+    private class MySurfaceViewCallback implements SurfaceHolder.Callback {
+
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width,
+                                   int height) {
+            // TODO Auto-generated method stub
+            System.out.println("------surfaceChanged------");
+            surfaceHolder = holder;
+        }
+
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            // TODO Auto-generated method stub
+            System.out.println("------surfaceCreated------");
+            surfaceHolder = holder;
+
+            ok_choice();
+        }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder holder) {
+            // TODO Auto-generated method stub
+            System.out.println("------surfaceDestroyed------");
+            surfaceView = null;
+            surfaceHolder = null;
+        }
+    }
+
+    private void ok_choice() {
+        // TODO Auto-generated method stub
+        System.out.println("------ok button down------");
+            height = 290;
+            width = 503;
+
+
+        CloseCamera();
+
+        InitCamera();
+    }
+
+    // 初始化camera
+    private void InitCamera() {
+        System.out.println("------InitCamera------");
+
+        if (!isOpen && !isRecord) {
+            camera = Camera.open(); // 取得第一个摄像头
+            param = camera.getParameters();// 获取param
+            param.setPreviewSize(width, height);// 设置预览大小
+            param.setPreviewFpsRange(4, 10);// 预览照片时每秒显示多少帧的范围张
+            param.setPictureFormat(ImageFormat.JPEG);// 图片形式
+            param.set("jpeg-quality", 95);
+            param.setPictureSize(1600, 900);
+            camera.setParameters(param);
+            try {
+                camera.setPreviewDisplay(surfaceHolder);// 设置预览显示
+            } catch (IOException e) {
+            }
+            // 进行预览
+            if (!previewRunning) {
+                camera.startPreview(); // 进行预览
+                previewRunning = true; // 已经开始预览
+            }
+
+            isOpen = true;
+        }
+    }
+
+    // 关闭摄像头
+    private void CloseCamera() {
+        if (camera != null) {
+            System.out.println("------CloseCamera------");
+            if (previewRunning) {
+                camera.stopPreview(); // 停止预览
+                previewRunning = false;
+            }
+            camera.release();
+            camera = null;
+            isOpen = false;
+        }
+    }
+
+
 
 
 

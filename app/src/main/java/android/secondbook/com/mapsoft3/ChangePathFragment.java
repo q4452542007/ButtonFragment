@@ -77,8 +77,6 @@ public class ChangePathFragment extends Fragment {
             readPath();
         }
         //适配器
-
-
         arr_adapter= new ArrayAdapter<String>(getActivity(), R.layout.spinner, pathnum_list);
         //设置样式
         arr_adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
@@ -99,8 +97,8 @@ public class ChangePathFragment extends Fragment {
                 mUpRecyclerView.setAdapter(upAdapter);
                 downAdapter = new StationAdapter(mPath.getDownStations());
                 mDownRecyclerView.setAdapter(downAdapter);
-                    upAdapter.notifyDataSetChanged();
-                    downAdapter.notifyDataSetChanged();
+                upAdapter.notifyDataSetChanged();
+                downAdapter.notifyDataSetChanged();
             }
 
             @Override
