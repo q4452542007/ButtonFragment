@@ -8,6 +8,10 @@
     <color name="speed">#FF03F1ED</color>
     <color name="next_station">#FFFFFFFF</color>
 
+    <color name="blue">#3399cc</color>
+    <color name="green">#00cc33</color>
+    <color name="gpsgreen">#007d3c</color>
+
     <color name="white">#FFFFFFFF</color>
 
     <color name="tab_tv_nor">#797979</color>

@@ -9,7 +9,20 @@
     <string name="affair">事务</string>
     <string name="option">设置</string>
 
+    <string name="loc_Longitude">经度：</string>
+    <string name="loc_latitude">纬度：</string>
+    <string name="loc_time">时间：</string>
+    <string name="loc_satellite_num">卫星数：</string>
+    <string name="loc_speed">速度：</string>
+    <string name="loc_reset">"  复  位  "</string>
+    <string name="reset">复位</string>
+    <string name="exit_button">退出</string>
 
-    <string name="anime_view">这是一个动漫界面</string>
-    <string name="variety_view">这是一个综艺界面</string>
+    <string name="gsm_isgsm">是否是GSM:</string>
+    <string name="gsm_cdma_dbm">CDMA 信号强度:</string>
+    <string name="gsm_cdma_ecio">CDMA 载干比:</string>
+    <string name="gsm_evdo_dbm">EVDO 信号强度:</string>
+    <string name="gsm_evdo_ecio">EVDO 载干比:</string>
+    <string name="gsm_gsm_signal">GSM 信号强度:</string>
+    <string name="gsm_gsm_bit">GSM 误码率:</string>
 </resources>

@@ -27,10 +27,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        hideBottomUIMenu();
-        getWindow().getDecorView().setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(R.layout.activity_main);
         mMain = (RelativeLayout) findViewById(R.id.main);
         mMain.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -73,6 +69,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         }
     }
 
+    public void setPathBtn(){
+        fm =getSupportFragmentManager();
+        ft = fm.beginTransaction();
+        setBackgroundColorById(R.id.path_btn);
+        ft.replace(R.id.fragment_content, ChangePathFragment.newInstance("book"));
+        ft.commit();
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -80,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
         switch (v.getId()) {
-
             case R.id.home_btn:
                 setBackgroundColorById(R.id.home_btn);
                 ft.replace(R.id.fragment_content, new HomeFragment());
