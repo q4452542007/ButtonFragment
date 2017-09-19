@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mMain = (RelativeLayout) findViewById(R.id.main);
         mMain.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
@@ -53,9 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         setBackgroundColorById(R.id.home_btn);
         ft.replace(R.id.fragment_content, new HomeFragment());
         ft.commit();
-
-
-
+        
     }
 
 
@@ -126,8 +124,4 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         // 不要忘记提交
         ft.commit();
     }
-    
-
-
-
 }

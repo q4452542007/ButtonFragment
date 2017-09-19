@@ -74,19 +74,10 @@ public class HomeFragment extends Fragment {
     private boolean previewRunning = false;
     private boolean isOpen = false;
 
-    // 数据保存
-    private String[] sysList = { "P  A  L", "N T S C", };
-    private String[] channelList = new String[6];
-
-    private SharedPreferences preferencesValue;
-    private SharedPreferences.Editor editorValue;
-
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferencesValue = getActivity().getSharedPreferences("feijie", MODE_WORLD_READABLE);
-        editorValue = preferencesValue.edit();
     }
 
     @Override
@@ -96,8 +87,6 @@ public class HomeFragment extends Fragment {
 
         wifiImage = (ImageView) view.findViewById(R.id.imageView);
         tv_time = (TextView) view.findViewById(R.id.mytime);
-
-
 
         // 初始化surfaceView
         surfaceView = (SurfaceView) view.findViewById(R.id.surface);
@@ -265,9 +254,5 @@ public class HomeFragment extends Fragment {
             isOpen = false;
         }
     }
-
-
-
-
 
 }
