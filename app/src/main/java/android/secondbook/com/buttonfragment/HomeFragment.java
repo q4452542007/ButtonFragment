@@ -1,10 +1,11 @@
-package android.secondbook.com.mapsoft3;
+package android.secondbook.com.buttonfragment;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -14,11 +15,11 @@ import android.media.MediaRecorder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -30,12 +31,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-
-import static android.content.Context.MODE_WORLD_READABLE;
+import java.util.List;
 
 
 /**
@@ -74,6 +79,10 @@ public class HomeFragment extends Fragment {
     private boolean previewRunning = false;
     private boolean isOpen = false;
 
+    public LocationClient mLocationClient;
+    private TextView speed,latitude,longitude;
+    private float mSpeed;
+    private StringBuilder stringBuilder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,23 +92,59 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
-        context = getContext();
-
+        mLocationClient = new LocationClient(getActivity().getApplicationContext());
+        mLocationClient.registerLocationListener(new MyLocationListener());
         wifiImage = (ImageView) view.findViewById(R.id.imageView);
         tv_time = (TextView) view.findViewById(R.id.mytime);
+        speed = (TextView) view.findViewById(R.id.bus_speed);
+        latitude = (TextView) view.findViewById(R.id.bus_path);
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 1;//图片宽高都为原来的二分之一，即图片为原来的四分之一
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.nowifi, options);
+        wifiImage.setImageBitmap(bitmap);
 
         // 初始化surfaceView
-        surfaceView = (SurfaceView) view.findViewById(R.id.surface);
+        /*surfaceView = (SurfaceView) view.findViewById(R.id.surface);
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(new MySurfaceViewCallback());
-        surfaceHolder.setType(surfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        surfaceHolder.setType(surfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);*/
 
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         mNetworkChangeReceiver = new NetworkChangeReceiver();
         getActivity().registerReceiver(mNetworkChangeReceiver, mIntentFilter);
         new TimeThread().start();
+
+        List<String> permissionList = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.READ_PHONE_STATE);
+        }
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (!permissionList.isEmpty()) {
+            String [] permission = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(getActivity(), permission, 1);
+        } else {
+            requestLocation();
+        }
+
         return view;
+    }
+    private void requestLocation() {
+        initLocation();
+        mLocationClient.start();
+    }
+    private void initLocation(){
+        LocationClientOption option = new LocationClientOption();
+        option.setScanSpan(1000);
+        option.setLocationMode(LocationClientOption.LocationMode.Device_Sensors);
+        option.setIsNeedAddress(true);
+        mLocationClient.setLocOption(option);
     }
 
     @Override
@@ -171,6 +216,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        CloseCamera();
         getActivity().unregisterReceiver(mNetworkChangeReceiver);
     }
 
@@ -209,7 +255,6 @@ public class HomeFragment extends Fragment {
             width = 503;
 
 
-        CloseCamera();
 
         InitCamera();
     }
@@ -218,7 +263,7 @@ public class HomeFragment extends Fragment {
     private void InitCamera() {
         System.out.println("------InitCamera------");
 
-        if (!isOpen && !isRecord) {
+        if (!isOpen) {
             camera = Camera.open(); // 取得第一个摄像头
             param = camera.getParameters();// 获取param
             param.setPreviewSize(width, height);// 设置预览大小
@@ -253,6 +298,68 @@ public class HomeFragment extends Fragment {
             camera = null;
             isOpen = false;
         }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,  String[] permissions,  int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0) {
+                    for (int result : grantResults) {
+                        if (result != PackageManager.PERMISSION_GRANTED) {
+                            Toast.makeText(getActivity(), "必须同意所有权限才能使用本程序", Toast.LENGTH_SHORT).show();
+                            getActivity().finish();
+                            return;
+                        }
+                    }
+                    requestLocation();
+                } else {
+                    Toast.makeText(getActivity(), "发生位置错误", Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
+                }
+                break;
+            default:
+        }
+    }
+    public class MyLocationListener implements BDLocationListener {
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            StringBuilder currentPosition = new StringBuilder();
+            currentPosition.append("维度：").append(location.getLatitude()).append("\n");
+            currentPosition.append("经线：").append(location.getLongitude()).append("\n");
+            /*currentPosition.append("速度：").append(location.getSpeed()).append("\n");
+            currentPosition.append("国家：").append(location.getCountry()).append("\n");
+            currentPosition.append("省：").append(location.getProvince()).append("\n");
+            currentPosition.append("市：").append(location.getCity()).append("\n");
+            currentPosition.append("区：").append(location.getDistrict()).append("\n");
+            currentPosition.append("街道：").append(location.getStreet()).append("\n");*/
+            currentPosition.append("定位方式：");
+            if (location.getLocType() == BDLocation.TypeGpsLocation) {
+                currentPosition.append("GPS");
+            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
+                currentPosition.append("网络");
+            }
+            mSpeed=location.getSpeed();
+            stringBuilder = currentPosition;
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    speed.setText(String.valueOf(mSpeed));
+                    latitude.setText(stringBuilder);
+                }
+            });
+           /*if (location.getLocType() == BDLocation.TypeGpsLocation || location.getLocType() == BDLocation.TypeNetWorkLocation) {
+               navigateTo(location);
+           }*/
+        }
+
+        @Override
+        public void onConnectHotSpotMessage(String s, int i) {
+
+        }
+
+
     }
 
 }

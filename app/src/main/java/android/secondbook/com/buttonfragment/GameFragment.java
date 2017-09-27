@@ -1,4 +1,4 @@
-package android.secondbook.com.mapsoft3;
+package android.secondbook.com.buttonfragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

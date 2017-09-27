@@ -13,6 +13,14 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="100dp"
+            />
+
+        <TextView
             android:id="@+id/bus_path"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,7 +28,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="20dp"
             android:layout_marginTop="64dp"
-            android:text="1路"/>
+            android:text="1路"
+            />
 
         <TextView
             android:id="@+id/textView3"
@@ -36,11 +45,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="33dp"
-            android:text="0.0Km/H"
+            android:text="0.0"
             android:textColor="@color/speed"
             android:textSize="50dp"
             android:layout_below="@+id/bus_path"
             android:layout_alignStart="@+id/bus_path"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
+            android:layout_marginLeft="90dp"
+            android:textColor="@color/speed"
+            android:textSize="50dp"
+            android:text="Km/H"
+            android:layout_below="@+id/bus_path"
+            />
 
         <TextView
             android:id="@+id/textView5"
@@ -70,9 +89,9 @@
             android:layout_height="wrap_content"
             android:text="下一站"
             android:textSize="30dp"
+            android:layout_marginTop="38dp"
             android:layout_below="@+id/current_station"
-            android:layout_alignStart="@+id/current_station"
-            android:layout_marginTop="36dp"/>
+            android:layout_marginLeft="5dp"/>
 
         <TextView
             android:id="@+id/textView4"

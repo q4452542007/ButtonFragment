@@ -1,4 +1,4 @@
-package android.secondbook.com.mapsoft3;
+package android.secondbook.com.buttonfragment;
 
 public class Gpsdata {
 	public int InfoType; // 数据类型

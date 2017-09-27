@@ -1,28 +1,35 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>无标题文档</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>�ޱ����ĵ�</title>
+
 </head>
+<style>
+    form{text-align:center;font-size:30px;}
+    button{font-size:30px;}
+    #degree{width:100px;font-size:30px}
+    .num{font-size:100px;}
+</style>
+
 <body>
-<ul>
-    <li>香蕉</li>
-    <li>花生</li>
-    <li>西瓜</li>
-    <li>黄瓜</li>
-	<li>香蕉</li>
-    <li>花生</li>
-    <li>西瓜</li>
-    <li>黄瓜</li>
-	<li>香蕉</li>
-    <li>花生</li>
-    <li>西瓜</li>
-    <li>黄瓜</li>
-	<li>香蕉</li>
-    <li>花生</li>
-    <li>西瓜</li>
-    <li>黄瓜</li>
-</ul>
-</map>
+<form action="" method="post" name="">
+    <label >�л���·</label>
+                <select name="degree" id="degree" onchange="callAndroid(this)" >
+                    <option class="num" value="1.html" >1</option>
+                    <option class="num" value="2.html">2</option>
+                    <option class="num" value="c.html">3</option>
+
+                </select>
+    <button type="button" id="button2" onclick="callAndroid()">����</button>
+    <button type="button" id="button1" onclick="callAndroid()">ȷ��</button>
+</form>
+<script>
+
+
+function callAndroid(e){
+        document.location="js://webview?"+e.value;
+}
+</script>
 </body>
 </html>
