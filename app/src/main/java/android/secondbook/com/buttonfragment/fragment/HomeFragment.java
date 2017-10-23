@@ -1,4 +1,4 @@
-package android.secondbook.com.buttonfragment;
+package android.secondbook.com.buttonfragment.fragment;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -15,8 +15,7 @@ import android.media.MediaRecorder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.secondbook.com.buttonfragment.R;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -37,9 +36,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -82,6 +79,7 @@ public class HomeFragment extends Fragment {
     public LocationClient mLocationClient;
     private TextView speed,latitude,longitude;
     private float mSpeed;
+    private String mTime;
     private StringBuilder stringBuilder;
 
     @Override
@@ -92,12 +90,20 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
+
+        if (getArguments() != null) {
+            String mParam1 = getArguments().getString("param");
+            TextView busPath =  (TextView)view.findViewById(R.id.bus_path);
+            busPath.setText(mParam1);
+        }
+
         mLocationClient = new LocationClient(getActivity().getApplicationContext());
         mLocationClient.registerLocationListener(new MyLocationListener());
         wifiImage = (ImageView) view.findViewById(R.id.imageView);
         tv_time = (TextView) view.findViewById(R.id.mytime);
         speed = (TextView) view.findViewById(R.id.bus_speed);
-        latitude = (TextView) view.findViewById(R.id.bus_path);
+        latitude = (TextView) view.findViewById(R.id.latitude);
+
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 1;//图片宽高都为原来的二分之一，即图片为原来的四分之一
@@ -114,7 +120,7 @@ public class HomeFragment extends Fragment {
         mIntentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         mNetworkChangeReceiver = new NetworkChangeReceiver();
         getActivity().registerReceiver(mNetworkChangeReceiver, mIntentFilter);
-        new TimeThread().start();
+        /*new TimeThread().start();*/
 
         List<String> permissionList = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -155,13 +161,16 @@ public class HomeFragment extends Fragment {
 
     public static HomeFragment newInstance(String content) {
         HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putString("param", content);
+        fragment.setArguments(args);
         return fragment;
     }
 
 
 
 
-    public class TimeThread extends  Thread{
+    /*public class TimeThread extends  Thread{
         @Override
         public void run() {
             super.run();
@@ -176,8 +185,8 @@ public class HomeFragment extends Fragment {
                 }
             }while (true);
         }
-    }
-    private Handler mHandler = new Handler(){
+    }*/
+/*    private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -192,7 +201,7 @@ public class HomeFragment extends Fragment {
                     break;
             }
         }
-    };
+    };*/
     class NetworkChangeReceiver extends BroadcastReceiver {
 
         @Override
@@ -327,6 +336,7 @@ public class HomeFragment extends Fragment {
             StringBuilder currentPosition = new StringBuilder();
             currentPosition.append("维度：").append(location.getLatitude()).append("\n");
             currentPosition.append("经线：").append(location.getLongitude()).append("\n");
+            mTime = location.getTime();
             /*currentPosition.append("速度：").append(location.getSpeed()).append("\n");
             currentPosition.append("国家：").append(location.getCountry()).append("\n");
             currentPosition.append("省：").append(location.getProvince()).append("\n");
@@ -347,6 +357,7 @@ public class HomeFragment extends Fragment {
                 public void run() {
                     speed.setText(String.valueOf(mSpeed));
                     latitude.setText(stringBuilder);
+                    tv_time.setText(mTime);
                 }
             });
            /*if (location.getLocType() == BDLocation.TypeGpsLocation || location.getLocType() == BDLocation.TypeNetWorkLocation) {

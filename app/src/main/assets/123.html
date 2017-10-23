@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-    <title>Œﬁ±ÍÃ‚Œƒµµ</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Êó†Ê†áÈ¢òÊñáÊ°£</title>
 
 </head>
 <style>
@@ -14,22 +14,29 @@
 
 <body>
 <form action="" method="post" name="">
-    <label >«–ªªœﬂ¬∑</label>
-                <select name="degree" id="degree" onchange="callAndroid(this)" >
-                    <option class="num" value="1.html" >1</option>
-                    <option class="num" value="2.html">2</option>
-                    <option class="num" value="c.html">3</option>
+    <label >ÂàáÊç¢Á∫øË∑Ø</label>
+    <select  id="degree" onchange="callAndroid(this)" >
+        <option class="num" value="1.html" >1Ë∑Ø</option>
+        <option class="num" value="2.html">2Ë∑Ø</option>
+        <option class="num" value="c.html">3Ë∑Ø</option>
 
-                </select>
-    <button type="button" id="button2" onclick="callAndroid()">∑µªÿ</button>
-    <button type="button" id="button1" onclick="callAndroid()">»∑∂®</button>
+    </select>
+    <button type="button" id="button1" onclick="changePath()">Á°ÆÂÆö</button>
 </form>
 <script>
-
+function changePath(){
+		var sel = document.getElementById("degree");
+		var selected_val = sel.options[sel.selectedIndex].text;
+		document.location="js://webview?"+"pathname="+selected_val;
+}
 
 function callAndroid(e){
-        document.location="js://webview?"+e.value;
+        document.location="js://webview?"+"filename="+e.value;
 }
+
+
+
+
 </script>
 </body>
 </html>

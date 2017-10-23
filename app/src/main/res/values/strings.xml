@@ -17,6 +17,8 @@
     <string name="loc_reset">"  复  位  "</string>
     <string name="reset">复位</string>
     <string name="exit_button">退出</string>
+    <string name="info_unknow">未知</string>
+    <string name="info_unknow_site">未知位置</string>
 
     <string name="gsm_isgsm">是否是GSM:</string>
     <string name="gsm_cdma_dbm">CDMA 信号强度:</string>

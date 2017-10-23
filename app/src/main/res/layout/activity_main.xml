@@ -21,7 +21,7 @@
         android:layout_alignParentBottom="true"
         >
 
-        <include layout="@layout/activity_bottom_btns" />
+        <include layout="@layout/activity_bottom_btns"/>
     </LinearLayout>
 
 </RelativeLayout>

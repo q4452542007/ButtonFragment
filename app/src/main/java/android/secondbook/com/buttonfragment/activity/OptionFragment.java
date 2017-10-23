@@ -1,7 +1,9 @@
-package android.secondbook.com.buttonfragment;
+package android.secondbook.com.buttonfragment.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.secondbook.com.buttonfragment.R;
+import android.secondbook.com.buttonfragment.check.TabLayoutActivity;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +49,7 @@ public class OptionFragment extends Fragment implements View.OnClickListener{
 
             case R.id.checkbtn:
                 Intent gps_intent = new Intent(getActivity(),
-                        LocationActivity.class);
+                        TabLayoutActivity.class);
                 getActivity().startActivity(gps_intent);
                 break;
 

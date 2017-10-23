@@ -33,15 +33,16 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="X2MtQrk9hNVEqoUQPsbTQ1RK0rb2Z5hY"/>
-        <activity android:name="android.secondbook.com.buttonfragment.MainActivity">
+        <activity android:name="android.secondbook.com.buttonfragment.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="android.secondbook.com.buttonfragment.LocationActivity" >
+        <activity android:name="android.secondbook.com.buttonfragment.check.TabLayoutActivity">
         </activity>
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

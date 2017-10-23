@@ -1,9 +1,13 @@
-package android.secondbook.com.buttonfragment;
+package android.secondbook.com.buttonfragment.fragment;
+
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.secondbook.com.buttonfragment.activity.MainActivity;
+import android.secondbook.com.buttonfragment.R;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +15,6 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Created by WangChang on 2016/5/15.
@@ -23,6 +24,7 @@ public class ChangePathFragment extends Fragment {
     private static final String ARG_PATH = "path";
 
     private static final String TAG = "ChangePathFragment";
+
 
     WebView mWebView1,mWebView2;
 
@@ -71,11 +73,17 @@ public class ChangePathFragment extends Fragment {
                                                   // 可以在协议上带有参数并传递到Android上
 
                                                   System.out.println("js调用了Android的方法");
-                                                  String ss = uri.getEncodedQuery();
+                                                  String ss = uri.getQueryParameter("filename");
+                                                  String pathNum = uri.getQueryParameter("pathname");
+                                                  if (pathNum!=null) {
+                                                      HomeFragment homeFragment = HomeFragment.newInstance(pathNum);
+                                                      FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                                      transaction.replace(R.id.fragment_content, homeFragment);
+                                                      transaction.commit();
+                                                      MainActivity parentActivity = (MainActivity ) getActivity();
+                                                      parentActivity.setBackgroundColorById(R.id.home_btn);
+                                                  }
                                                   mWebView2.loadUrl("file:///android_asset/"+ss);
-                                                  HashMap<String, String> params = new HashMap<>();
-                                                  Set<String> collection = uri.getQueryParameterNames();
-
                                               }
 
                                               return true;

@@ -1,7 +1,11 @@
-package android.secondbook.com.buttonfragment;
+package android.secondbook.com.buttonfragment.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.secondbook.com.buttonfragment.R;
+import android.secondbook.com.buttonfragment.fragment.AffairFragment;
+import android.secondbook.com.buttonfragment.fragment.ChangePathFragment;
+import android.secondbook.com.buttonfragment.fragment.HomeFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -62,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         btnList.add(optionBtn);
     }
 
-    private void setBackgroundColorById(int btnId) {
+    public void setBackgroundColorById(int btnId) {
         for (Button btn : btnList) {
             if (btn.getId() == btnId) {
                 btn.setBackgroundColor(Color.RED);

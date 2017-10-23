@@ -1,6 +1,7 @@
-package android.secondbook.com.buttonfragment;
+package android.secondbook.com.buttonfragment.fragment;
 
 import android.os.Bundle;
+import android.secondbook.com.buttonfragment.R;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
